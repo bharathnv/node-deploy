@@ -33,7 +33,8 @@ app.post('/sendMessage', urlencodedParser, function (req, res) {
 app.post('/makeCall', urlencodedParser, function (req, res) {
 	client.calls
   .create({
-    url: 'http://demo.twilio.com/docs/voice.xml',
+    //url: 'http://demo.twilio.com/docs/voice.xml',
+	url: 'https://assignment-backend-node.herokuapp.com/callbackForCall'
     to: '+91'+ req.body.to,
     from: '+14159803151',
   })
@@ -41,6 +42,19 @@ app.post('/makeCall', urlencodedParser, function (req, res) {
 	process.stdout.write(call.sid);
 	res.end(JSON.stringify(call));
   });
+});
+
+app.get('/callbackForCall', urlencodedParser, function (req, res) {
+	const VoiceResponse = require('twilio').twiml.VoiceResponse;
+	const response = new VoiceResponse();
+	response.say(
+	  {
+		voice: 'man',
+		language: 'en',
+	  },
+	  'Hi this is bharath, Talking through twilio services'
+	);
+	console.log(response.toString());
 });
 
 var server = app.listen(process.env.PORT || 8080, function () {
