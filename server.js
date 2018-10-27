@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 //app.use(cors());
 
 app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Origin', '*,https://assignment-angular-deployment.herokuapp.com');
 	res.header('Access-Control-Allow-Headers', 'Origin, Content-Type');
 	next();
 });
