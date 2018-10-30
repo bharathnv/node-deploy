@@ -2,9 +2,7 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 var bodyParser = require('body-parser');
-const accountSid = 'AC1272f00ea8d0ce83270e9354459fe7d2';
-const authToken = '9d19332df30ae8b49efe78f8381498e8';
-const client = require('twilio')(accountSid, authToken);
+var twilio = require('twilio');
 
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: true });
@@ -17,11 +15,12 @@ app.get('/', function (req, res) {
 });
 
 app.post('/sendMessage', urlencodedParser, function (req, res) {
+	const client = twilio(req.body.accountSid, req.body.authToken);
 	client.messages
 	.create({
      body: req.body.body,
      from: '+14159803151',
-     to: '+91' + req.body.to
+     to: '+91'+req.body.to
 	})
 	.then(message => {
 	  console.log(message.sid);
@@ -31,11 +30,11 @@ app.post('/sendMessage', urlencodedParser, function (req, res) {
 });
 
 app.post('/makeCall', urlencodedParser, function (req, res) {
+	const client = twilio(req.body.accountSid, req.body.authToken);
 	client.calls
   .create({
-    //url: 'http://demo.twilio.com/docs/voice.xml',
-	url: 'https://assignment-backend-node.herokuapp.com/callbackForCall',
-	to: '+91'+ req.body.to,
+    url: 'https://assignment-backend-node.herokuapp.com/callbackForCall',
+    to: '+91'+ req.body.to,
     from: '+14159803151',
   })
   .then(call => {
@@ -62,4 +61,4 @@ var server = app.listen(process.env.PORT || 8080, function () {
    var port = server.address().port
    
    console.log("Example app listening at http://%s:%s", host, port)
-})
+});
